@@ -265,20 +265,77 @@ class CountConfigurationsHashTable { // counting of stable configurations using 
 	// whose lines are lines of rows and whose height is height
 	// using our hash table
 	static long count(Row r1, Row r2, LinkedList<Row> rows, int height) {
-		throw new Error(
-				"method count(Row r1, Row r2, LinkedList<Row> rows, int height) of the class CountConfigurationsHashTable to be completed (Question 4)");
+		long ans = 0;
+
+		if(memo.find(r1,r2,height) != null){
+			return memo.find(r1,r2,height);
+		}
+		if(height <= 1){
+			memo.add(r1, r2, height, 0);
+			return 0;
+		}
+		else if(height == 2){
+			memo.add(r1, r2, height, 1);
+			return 1;
+		}
+		for(Row row : rows){
+			if(row.areStackable(r1, r2)){
+				ans += count(r2, row, rows, height - 1);
+			}
+		}
+
+		memo.add(r1, r2, height, ans);
+
+		return ans;
 	}
 
 	// return the number of grids with n lines and n columns
 	static long count(int n) {
-		throw new Error("method count(int n) of the class CountConfigurationsHashTable to be completed (Question 4)");
+		if(n == 0){
+			return 1;
+		}
+		if(n == 1){
+			return 2;
+		}
+		long ans = 0;
+		LinkedList<Row> a = Row.allStableRows(n);
+		int size = a.size();
+
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				ans+=count(a.get(i),a.get(j),a,n);
+			}
+		}
+
+		return ans;
 	}
 }
 
 //Use of HashMap
 
 class Triple { // triplet (r1, r2, height)
-	// to be completed
+	Row r1;
+	Row r2;
+	int height;
+
+	Triple(Row r1, Row r2, int height) {
+		this.r1 = r1;
+		this.r2 = r2;
+		this.height = height;
+	}
+
+	@Override
+	public int hashCode() {
+		int p1 = 21,p2 = 37,p3 = 53;
+		int ans = r1.hashCode() * p1 + r2.hashCode() * p2 + height * p3;
+		return ans;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Triple that = (Triple) o;
+		return r1.equals(that.r1) && r2.equals(that.r2) && height == that.height;
+	}
 }
 
 class CountConfigurationsHashMap { // counting of stable configurations using the HashMap of java
@@ -290,12 +347,51 @@ class CountConfigurationsHashMap { // counting of stable configurations using th
 	// whose lines are lines of rows and whose height is height
 	// using the HashMap of java
 	static long count(Row r1, Row r2, LinkedList<Row> rows, int height) {
-		throw new Error(
-				"method count(Row r1, Row r2, LinkedList<Row> rows, int height) of the class CountConfigurationsHashMap to be completed (Question 5)");
+		long ans = 0;
+		if(memo.containsKey(new Triple(r1, r2, height))){
+			return memo.get(new Triple(r1, r2, height));
+		}
+
+		if(height <= 1){
+			memo.put(new Triple(r1, r2, height), 0L);
+			return 0;
+		}
+		if(height == 2){
+			memo.put(new Triple(r1, r2, height), 1L);
+			return 1;
+		}
+
+		for(Row row : rows){
+			if(row.areStackable(r1, r2)){
+				ans += count(r2, row, rows, height - 1);
+			}
+		}
+
+		memo.put(new Triple(r1, r2, height), ans);
+
+		return ans;
 	}
 
 	// return the number of grids with n lines and n columns
 	static long count(int n) {
-		throw new Error("method count(int n) of the class CountConfigurationsHashMap to be completed (Question 5)");
+		long ans = 0;
+		if(n == 0){
+			return 1;
+		}
+		if(n == 1){
+			return 2;
+		}
+		LinkedList<Row> a = Row.allStableRows(n);
+		int size = a.size();
+
+
+
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				ans += count(a.get(i),a.get(j),a,n);
+			}
+		}
+
+		return ans;
 	}
 }
