@@ -50,11 +50,6 @@ public class Hex {
   Player winner = Player.NOONE;
   int n,node;
 
-  int redTopNode;
-  int redBottomNode;
-  int blueLeftNode;
-  int blueRightNode;
-
   private int find(int x) {
     if (par.get(x) != x) {
       par.set(x, find(par.get(x)));
@@ -84,13 +79,6 @@ public class Hex {
     this.n = n;
     node = (n+2)*(n*2) ;
 
-    redTopNode = node + 4;
-    redBottomNode = node + 3;
-    blueLeftNode = node + 2;
-    blueRightNode = node + 1;
-
-    node += 4;
-
     a = new Vector<Vector<Player>>(n+2);
     for (int i = 0; i < n+2; i++) {
       Vector<Player> x = new Vector<Player>(n+2);
@@ -115,20 +103,20 @@ public class Hex {
     }
 
 
-    for (int j = 1; j <= n; j++) {
-      union(label(0, j), redTopNode);
+    for (int j = 1; j < n; j++) {
+      union(label(0, j), label(0, j+1));
     }
 
-    for (int j = 1; j <= n; j++) {
-      union(label(n+1, j), redBottomNode);
+    for (int j = 1; j < n; j++) {
+      union(label(n+1, j), label(n+1, j+1));
     }
 
-    for (int i = 1; i <= n; i++) {
-      union(label(i, 0), blueLeftNode);
+    for (int i = 1; i < n; i++) {
+      union(label(i, 0), label(i+1, 0));
     }
 
-    for (int i = 1; i <= n; i++) {
-      union(label(i, n+1), blueRightNode);
+    for (int i = 1; i < n; i++) {
+      union(label(i, n+1), label(i+1, n+1));
     }
 
   }
@@ -214,12 +202,12 @@ public class Hex {
     if(winner != Player.NOONE){
       return winner;
     }
-
-    if (find(redTopNode) == find(redBottomNode)) {
+    if (find(label(1,0)) == find(label(1,12))) {
       winner = Player.RED;
-    } else if (find(blueLeftNode) == find(blueRightNode)) {
+    } else if (find(label(0,1)) == find(label(12,1))) {
       winner = Player.BLUE;
     }
+
 
 
     return winner;
