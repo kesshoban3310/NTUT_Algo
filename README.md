@@ -12,3 +12,4 @@
 |----------|------------------------|-------|
 | Hw1      | Battle (Basic Technic) | 100   |
 | Hw2      | Fruits and hash tables | NaN   |
+| Hw3      | Hex game and Union Find  | NaN   |
