@@ -125,8 +125,11 @@ public class Hex {
   Player get(int i, int j) {
     return a.get(i).get(j);
   }
-  private Pair<Boolean, Pair<Integer, Integer>> chk(int i, int j, Player c) {
+  private void chk(int i, int j) {
     // 六個方向偏移量
+
+    a.get(i).set(j,p);
+
     int[] dx = {0, 1, -1, 1, -1, 0};
     int[] dy = {-1, -1, 0, 0, 1, 1};
 
@@ -135,24 +138,15 @@ public class Hex {
     for (int k = 0; k < 6; k++) {
       int ni = i + dx[k];
       int nj = j + dy[k];
-      if (a.get(ni).get(nj).equals(c)) {
+      if (a.get(ni).get(nj).equals(p)) {
         ans = new Pair<>(true, new Pair<>(ni, nj));
 
-        for(int t=0;t<6;t++){
-          if(k == t) continue;
-          int tni = i + dx[k];
-          int tnj = j + dy[k];
-          if (a.get(tni).get(tnj).equals(c)) {
-            union(label(i,j), label(tni,tnj));
-          }
-        }
+        union( label(i ,j ), label(ni, nj) );
 
-        break;
       }
     }
 
     // 沒找到
-    return ans;
   }
   private void Switch(){
     if(p == Player.RED){
@@ -171,19 +165,10 @@ public class Hex {
       return false;
     }
 
-    Pair<Boolean, Pair<Integer, Integer>> g = chk(i, j, p);
-    if(g.first){
-      a.get(i).set(j, p);
-    }
+    chk(i, j);
 
-    if(g.first) {
-      int now = label(i, j);
-      int par = label(g.second.first, g.second.second);
-
-      union(now, par);
-    }
     Switch();
-    return g.first;
+    return true;
   }
 
   // return the player with the trait or Player.NOONE if the game is over
