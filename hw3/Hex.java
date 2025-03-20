@@ -188,17 +188,11 @@ public class Hex {
       return winner;
     }
 
-    System.out.println(find(label(1,0)) + " " + find(label(1,n+1)));
-    System.out.println(find(label(0,1)) + " " + find(label(n+1,1)));
-
     if (find(label(1,0)) == find(label(1,n+1))) {
       winner = Player.RED;
     } else if (find(label(0,1)) == find(label(n+1,1))) {
       winner = Player.BLUE;
     }
-
-
-
     return winner;
   }
 
