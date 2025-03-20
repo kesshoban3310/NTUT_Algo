@@ -187,9 +187,13 @@ public class Hex {
     if(winner != Player.NOONE){
       return winner;
     }
-    if (find(label(1,0)) == find(label(1,12))) {
+
+    System.out.println(find(label(1,0)) + " " + find(label(1,n+1)));
+    System.out.println(find(label(0,1)) + " " + find(label(n+1,1)));
+
+    if (find(label(1,0)) == find(label(1,n+1))) {
       winner = Player.RED;
-    } else if (find(label(0,1)) == find(label(12,1))) {
+    } else if (find(label(0,1)) == find(label(n+1,1))) {
       winner = Player.BLUE;
     }
 
