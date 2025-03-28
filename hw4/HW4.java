@@ -38,8 +38,22 @@ class ExtendedCell extends Cell {
 	 */
 	boolean searchPath() {
 		maze.slow(); // slow down the search animation (to help debugging)
-
-		throw new Error("method searchPath() to be completed (Question 1)");
+		List<Cell> near = getNeighbors(false);
+		if(isExit()){
+			setMarked(true);
+			return true;
+		}
+		int n = near.size();
+		for(int i=0;i<n;i++) {
+			if(near.get(i).isMarked()){
+				continue;
+			}
+			setMarked(true);
+			if(near.get(i).searchPath())
+				return true;
+			setMarked(false);
+		}
+		return false;
 	}
 
 	// Question 2
@@ -49,8 +63,17 @@ class ExtendedCell extends Cell {
 	 */
 	void generateRec() {
 		maze.slow();
+		List<Cell> near = getNeighbors(true);
+		Collections.shuffle(near);
+		int n = near.size();
+		for(int i=0;i<n;i++) {
+			if(near.get(i).isIsolated()){
+				near.get(i).breakWall(this);
+				near.get(i).addNeighbor(this);
+				near.get(i).generateRec();
+			}
+		}
 
-		throw new Error("method generateRec() to be completed (Question 2)");
 	}
 
 }
