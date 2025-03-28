@@ -11,5 +11,6 @@
 | Homework | Info                   | Score |
 |----------|------------------------|-------|
 | Hw1      | Battle (Basic Technic) | 100   |
-| Hw2      | Fruits and hash tables | NaN   |
-| Hw3      | Hex game and Union Find  | NaN   |
+| Hw2      | Fruits (hash tables) | 100   |
+| Hw3      | Hex game (Union Find)  | NaN   |
+| Hw4      | Maze (B/DFS)  | NaN   |

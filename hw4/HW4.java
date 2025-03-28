@@ -100,8 +100,22 @@ class Maze {
 		while(!cells.isEmpty()) {
 			slow();
 
-			 throw new Error("method generateIter() to be completed (Question 3)");
+			Cell cell = cells.peek();
+			List<Cell> near = cell.getNeighbors(true);
+			Collections.shuffle(near);
+			int n = near.size();
+			boolean hasNeighbor = false;
+			for(Cell c:near) {
+				if(c.isIsolated()){
+					cell.breakWall(c);
+					cells.add(c);
+					hasNeighbor = true;
+				}
+			}
 
+			if(!hasNeighbor) {
+				cells.pop();
+			}
 		}
 
 	}
