@@ -11,10 +11,10 @@ public class Test1 {
 
 		System.out.print("testing searchPath() with 25x25 maze... ");
 
-		Maze m25 = new Maze("src/maze25.txt");
+		Maze m25 = new Maze("maze25.txt");
 		m25.getFirstCell().searchPath();
 
-		Maze m25sol = new Maze("src/maze25sol.txt", false);
+		Maze m25sol = new Maze("maze25sol.txt", false);
 		assert(m25.equals(m25sol)) : "not the correct solution";
 
 		System.out.println("\t\t[OK]");
