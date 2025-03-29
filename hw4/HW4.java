@@ -5,10 +5,7 @@
  * 	- Maze models a maze.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import java.io.IOException;
 
@@ -127,7 +124,38 @@ class Maze {
 	 * generate a maze using Wilson's algorithm
 	 */
 	void generateWilson() {
-		throw new Error("method generateWilson() to be completed (Question 4)");
+		ArrayList<Cell> wilson = new ArrayList<>();
+		for(int i=0;i<height;i++) {
+			for(int j=0;j<width;j++) {
+				wilson.add(getCell(i,j));
+			}
+		}
+		ArrayList<Cell> vis = new ArrayList<>();
+		vis.add(getFirstCell());
+		wilson.remove(getFirstCell());
+		while(!wilson.isEmpty()) {
+			slow();
+			Cell cell = wilson.get( new Random().nextInt(wilson.size()) );
+			ArrayList<Cell> path = new ArrayList<>();
+			path.add(cell);
+			while(!vis.contains(cell)) {
+				cell = cell.getNeighbors(true).get(new Random().nextInt(cell.getNeighbors(true).size()));
+				if(path.contains(cell)) {
+					int idx = path.indexOf(cell);
+					path = new ArrayList<>(path.subList(0,idx+1));
+				}
+				else {
+					path.add(cell);
+				}
+			}
+			int n = path.size();
+			for(int i=0;i<n-1;i++) {
+				Cell c = path.get(i);
+				c.breakWall(path.get(i+1));
+				vis.add(c);
+				wilson.remove(c);
+			}
+		}
 	}
 
 	/**

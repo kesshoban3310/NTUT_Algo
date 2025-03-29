@@ -25,7 +25,7 @@ public class Test4 {
 		System.out.println("\t[OK]");
 
 		System.out.print("testing uniformity of generateWilson()... ");
-		Maze m3 = new Maze("src/maze3.txt", false);
+		Maze m3 = new Maze("maze3.txt", false);
 		int cnt = 0;
 
 		// Chernoff bound parameters
