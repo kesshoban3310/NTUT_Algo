@@ -74,7 +74,7 @@ public class ColorPalette {
 	
 	public static void main(String[] args) {
 		//Witness Palette
-		Picture orig = new Picture("photo.jpg");
+		Picture orig = new Picture("test.jpg");
 		orig.show();
 		
 		//Palette web

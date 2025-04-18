@@ -1,5 +1,7 @@
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Vector;
+import java.util.PriorityQueue;
 
 public class KDTree {
 	int depth;
@@ -83,50 +85,122 @@ public class KDTree {
 	}
 
 	static double[] closest(KDTree tree, double[] a, double[] champion) {
-		if (tree == null) {
-			return champion;  // 如果樹為空，返回當前的最佳選擇
-		}
+		if (tree == null)
+			return champion;
 
-		// 對 InteractiveClosest 進行追蹤
+		// sert pour InteractiveClosest.
 		InteractiveClosest.trace(tree.point, champion);
 
-		double[] tmp = tree.point;
-		int dim = tree.depth % tmp.length;  // 根據深度選擇維度
-
-		// 比較目標點與當前節點的對應維度的大小，選擇進入左子樹或右子樹
-		KDTree same = (a[dim] < tmp[dim]) ? tree.left : tree.right;
-		KDTree ops = (a[dim] < tmp[dim]) ? tree.right : tree.left;
-
-		// 先從選擇的子樹中查找最近點
-		double[] champ = closest(same, a, champion);
-
-		// 如果目前的最小距離比過去的最小距離大，則可能需要檢查反向子樹
-		if (tree.sqDist(a, champ) > Math.pow(a[dim] - tmp[dim], 2)) {
-			champ = closest(ops, a, champ);  // 在另一個子樹中繼續查找
+		double d = sqDist(a, champion);
+		double d2 = sqDist(a, tree.point);
+		if (d2 <= d) {
+			champion = tree.point;
+			d = d2;
 		}
 
-		return champ;  // 返回當前找到的最近點
+		int idx = tree.depth % a.length;
+		KDTree near, far;
+		if (a[idx] < tree.point[idx]) {
+			near = tree.left;
+			far = tree.right;
+		} else {
+			near = tree.right;
+			far = tree.left;
+		}
+
+		double[] nearChampion = closest(near, a, champion);
+		d2 = sqDist(a, nearChampion);
+		if (d2 <= d) {
+			champion = nearChampion;
+			d = d2;
+		}
+
+		double sqPlaneDist = Math.sqrt((tree.point[idx] - a[idx]) * (tree.point[idx] - a[idx]));
+		if (sqPlaneDist < d) {
+			double[] farChampion = closest(far, a, champion);
+			d2 = sqDist(a, farChampion);
+			if (d2 <= d) {
+				champion = farChampion;
+			}
+		}
+
+		return champion;
 	}
 
 	static double[] closest(KDTree tree, double[] a) {
-		return closest(tree,a,tree.point);
+		double[] tmp = tree.point;
+		return closest(tree,a,tmp);
 	}
 
 	static int size(KDTree tree) {
-		throw(new Error("TODO"));
+		if(tree == null){
+			return 0;
+		}
+		int l = size(tree.left);
+		int r = size(tree.right);
+		return l + r + 1;
 	}
 
 	static void sum(KDTree tree, double[] acc) {
-		throw(new Error("TODO"));
+		Queue<KDTree> queue = new LinkedList<>();
+		if(tree == null){
+			return;
+		}
+		queue.add(tree);
+		int n = acc.length;
+		while (!queue.isEmpty()){
+			KDTree current = queue.remove();
+			for(int i=0;i<n;i++){
+				acc[i] += current.point[i];
+			}
+			if(current.left != null){
+				queue.add(current.left);
+			}
+			if(current.right != null){
+				queue.add(current.right);
+			}
+		}
 	}
 
 	static double[] average(KDTree tree) {
-		throw(new Error("TODO"));
+		double[] ans = new double[tree.point.length];
+		sum(tree, ans);
+		int si = size(tree);
+		for(int i=0;i<ans.length;i++){
+			ans[i] /= si;
+		}
+		return ans;
 	}
 
 
 	static Vector<double[]> palette(KDTree tree, int maxpoints) {
-		throw(new Error("TODO"));
+
+
+
+		Vector<double[]> palette = new Vector<>();
+		if (tree == null)
+			return palette;
+
+		PriorityQueue<KDTree> queue = new PriorityQueue<>(
+				(a, b) -> Integer.compare(size(b), size(a)));
+		queue.add(tree);
+		while (queue.size() < maxpoints) {
+			KDTree current = queue.poll();
+			if (current == null || (current.left == null && current.right == null))
+				continue;
+			if (current.left != null) {
+				queue.add(current.left);
+			}
+			if (current.right != null) {
+				queue.add(current.right);
+			}
+		}
+		for (KDTree t : queue) {
+			double[] avg = average(t);
+			palette.add(avg);
+		}
+		return palette;
+		
 	}
 
 	public String pointToString() {
