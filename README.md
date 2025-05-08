@@ -13,5 +13,5 @@
 | Hw1      | Battle (Basic Technic) | 100   |
 | Hw2      | Fruits (hash tables) | 100   |
 | Hw3      | Hex game (Union Find)  | 100   |
-| Hw4      | Maze (B/DFS)  | NaN   |
-| Hw5      | Color Palette (KDTree)  | NaN   |
+| Hw4      | Maze (B/DFS)  | 100   |
+| Hw5      | Color Palette (KDTree)  | 100   |
