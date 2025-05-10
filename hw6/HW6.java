@@ -125,18 +125,57 @@ class MergeSortString {
 	// Realizes the merge of the two lists passed as arguments, returns the merged list.
 	// The two lists passed as arguments are destroyed since the operation
 	// is done "in place".
-	
+
 	static Singly<String> merge(Singly<String> l1, Singly<String> l2) {
-		throw new Error("Method merge(Singly<String> l1, Singly<String> l2) to be completed (Question 2.2)");
+		if (l1 == null) return l2;
+		if (l2 == null) return l1;
+
+		Singly<String> ans;
+		Singly<String> last;
+
+		if (l1.element.compareTo(l2.element) <= 0) {
+			ans = l1;
+			l1 = l1.next;
+		} else {
+			ans = l2;
+			l2 = l2.next;
+		}
+		last = ans;
+
+		while (l1 != null && l2 != null) {
+			if (l1.element.compareTo(l2.element) <= 0) {
+				last.next = l1;
+				l1 = l1.next;
+			} else {
+				last.next = l2;
+				l2 = l2.next;
+			}
+			last = last.next;
+		}
+
+		if (l1 != null) last.next = l1;
+		if (l2 != null) last.next = l2;
+
+		return ans;
 	}
 
 	// Question 2.2
 	// Sort (recursively) the list passed as an argument by sorting each of its two halves separately before merging the two sorted halves.
 	// The list passed as an argument is destroyed during the operation.
-	
+
 	static Singly<String> sort(Singly<String> l) {
-		throw new Error("Method sort(Singly<String> l) to be completed (Question 2.2)");
+		// Base case: 空或只有一個元素，不用排
+		if (l == null || l.next == null) return l;
+
+		// 拆成兩半
+		Singly<String> mid = l.split(l);     // 會破壞 l，返回後半段
+		Singly<String> left = sort(l);     // 遞迴排序左半
+		Singly<String> right = sort(mid);  // 遞迴排序右半
+
+		// 合併排序好的兩半
+		return merge(left, right);
 	}
+
 
 }
 
@@ -159,16 +198,43 @@ class Occurrence implements Comparable<Occurrence> {
 	// Return a list whose each link contains a word present
 	// in the list of words passed as an argument, with its multiplicity.
 	// The list passed as an argument can be destroyed.
-	
+
 	static Singly<Occurrence> count(Singly<String> l) {
-		throw new Error("Method count(Singly<String> l) to be completed (Question 2.3)");
+		Singly<String> shit = MergeSortString.sort(l);
+		Singly<Occurrence> ans = null,h = null;
+		while (shit != null) {
+			String word = shit.element;
+			int count = 0;
+
+			while (shit != null && shit.element.equals(word)) {
+				count++;
+				shit = shit.next;
+			}
+
+			Occurrence occ = new Occurrence(word, count);
+			Singly<Occurrence> node = new Singly<>(occ,null);
+
+			if (ans == null) {
+				ans = node;
+				h = node;
+			} else {
+				h.next = node;
+				h = node;
+			}
+		}
+
+		return ans;
 	}
 	
 	// Question 3.2
 	// Method of comparison necessary for the use of the sorting algorithm
 	
 	public int compareTo(Occurrence that) {
-		throw new Error("Method compareTo(Occurrence that) to be completed (Question 3.2)");
+		if (this.count > that.count) return -1;
+		else if (this.count < that.count) return 1;
+		else {
+			return this.word.compareTo(that.word);
+		}
 	}
 
 	// Question 3.2
@@ -176,7 +242,9 @@ class Occurrence implements Comparable<Occurrence> {
 	// is sorted in descending order of multiplicity.
 	
 	static Singly<Occurrence> sortedCount(Singly<String> l) {
-		throw new Error("Method sortedCount(Singly<String> l) to be completed (Question 3.2)");
+		Singly<Occurrence> ans = Occurrence.count(l);
+		ans = MergeSort.sort(ans);
+		return ans;
 	}
 }
 
@@ -191,14 +259,56 @@ class MergeSort {
 	// Identical to merge(Singly<String> l1, Singly<String> l2) with "E" instead of "String"
 	
 	static<E extends Comparable<E>> Singly<E> merge(Singly<E> l1, Singly<E> l2) {
-		throw new Error("Method merge(Singly<E> l1, Singly<E> l2) to be completed (Question 3.1)");
+		if (l1 == null) return l2;
+		if (l2 == null) return l1;
+
+		Singly<E> head;
+
+		if (l1.element.compareTo(l2.element) <= 0) {
+			head = l1;
+			l1 = l1.next;
+		} else {
+			head = l2;
+			l2 = l2.next;
+		}
+
+		Singly<E> tail = head;
+		while (l1 != null && l2 != null) {
+			if (l1.element.compareTo(l2.element) <= 0) {
+				tail.next = l1;
+				l1 = l1.next;
+			} else {
+				tail.next = l2;
+				l2 = l2.next;
+			}
+			tail = tail.next;
+		}
+
+		if (l1 != null) tail.next = l1;
+		else tail.next = l2;
+
+		return head;
 	}
 
 	// Question 3.1
 	// Identical to sort(Singly<String> l) with "E" instead of "String"
 	
 	static<E extends Comparable<E>> Singly<E> sort(Singly<E> l) {
-		throw new Error("Method sort(Singly<E> l) to be completed (Question 3.1)");
+		if (l == null || l.next == null) return l;
+
+		// 拆成兩半
+		Singly<E> slow = l, fast = l, prev = null;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			prev = slow;
+			slow = slow.next;
+		}
+		if (prev != null) prev.next = null; // 斷開前後
+
+		Singly<E> left = sort(l);
+		Singly<E> right = sort(slow);
+
+		return merge(left, right);
 	}
 
 }
@@ -212,6 +322,20 @@ class Median {
 	// in the form of a linked list.
 	
 	static Pair<Double> median (Singly<Double> data) {
-		throw new Error("Method median (Singly<Double> data) to be completed (Question 3.3)");
+		if(data == null){
+			return new Pair<>(Double.NaN, Double.NaN);
+		}
+		Singly<Double> head = MergeSort.sort(data);
+		int size = Singly.length(head);
+		Singly<Double> r = Singly.split(head);
+		while(head.next != null){
+			head = head.next;
+		}
+		if(size % 2 == 0){
+			return new Pair<>(head.element, r.element);
+		}
+		else {
+			return new Pair<>(head.element, head.element);
+		}
 	}
 }

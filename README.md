@@ -15,3 +15,4 @@
 | Hw3      | Hex game (Union Find)  | 100   |
 | Hw4      | Maze (B/DFS)  | 100   |
 | Hw5      | Color Palette (KDTree)  | 100   |
+| Hw5      | Merge Sort with linked list  | NaN   |
