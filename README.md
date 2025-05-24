@@ -16,4 +16,4 @@
 | Hw4      | Maze (B/DFS)  | 100   |
 | Hw5      | Color Palette (KDTree)  | 100   |
 | Hw6      | Merge Sort with linked list  | 100   |
-| Hw5      | BFS & DFS for RushHour  | NaN   |
+| Hw7      | BFS & DFS for RushHour  | NaN   |
